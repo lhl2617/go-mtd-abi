@@ -15,3 +15,11 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+### Vagrant.gitignore
+
+# General
+.vagrant/
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+# *.log
