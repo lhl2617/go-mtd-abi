@@ -12,7 +12,7 @@ Golang implementation of helper functions for the `ioctl` calls in the [Linux MT
 
 EXPERIMENTAL.
 
-This package is not thoroughly tested, no warranties given!
+No warranties--use at your own risk!
 
 ## Usage
 
@@ -51,6 +51,22 @@ func check(err error) {
 		panic(err)
 	}
 }
+```
+
+See more usage examples in the test file ([`mtdabi_test.go`](./mtdabi_test.go)).
+
+## Development Guide
+
+Please run tests in the Vagrant box given. You may spin up the Vagrant box and run tests as such:
+```bash
+# Set up and boot up the Vagrant box
+vagrant up
+# SSH into the box
+vagrant ssh
+# cd into the repo
+cd /vagrant
+# Run tests
+sudo go test ./...
 ```
 
 ## Contributing
