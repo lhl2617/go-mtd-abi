@@ -133,7 +133,7 @@ func checkPwdIsVagrant() error {
 }
 
 func setupNandsim() error {
-	_, err := exec.Command("sudo", "modprobe", "nandsim", "first_id_byte=0x20", "second_id_byte=0x35").Output()
+	_, err := exec.Command("modprobe", "nandsim", "first_id_byte=0x20", "second_id_byte=0x35").Output()
 	if err != nil {
 		return errors.New(fmt.Sprintf("modprobe command failed: %v", err))
 	}
