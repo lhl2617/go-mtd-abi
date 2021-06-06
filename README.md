@@ -57,6 +57,8 @@ See more usage examples in the test file ([`mtdabi_test.go`](./mtdabi_test.go)).
 
 ## Development Guide
 
+### Testing
+
 Please run tests in the Vagrant box given. You may spin up the Vagrant box and run tests as such:
 ```bash
 # Set up and boot up the Vagrant box
@@ -67,6 +69,17 @@ vagrant ssh
 cd /vagrant
 # Run tests
 sudo go test ./...
+```
+
+### VSCode `gopls` settings
+
+To develop in VSCode with `gopls` on a non-Linux environment, add this to `.vscode/settings.json`:
+```json
+	...
+    "gopls.env": {
+        "GOFLAGS": "-tags=linux"
+    },
+	...
 ```
 
 ## Contributing
