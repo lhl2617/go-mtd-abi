@@ -18,6 +18,7 @@ import (
 )
 
 const kernelVersion = "5.12.8-arch1-1"
+const procMtdPath = "/proc/mtd"
 
 /*
 This simulated MTD (32MiB, 512 bytes page NAND flash) is created by the command
@@ -97,6 +98,10 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = checkNoMtds()
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = setupNandsim()
 	if err != nil {
 		log.Fatal(err)
@@ -132,19 +137,32 @@ func checkPwdIsVagrant() error {
 	return nil
 }
 
+// checkNoMtds ensures the non-existence of the /proc/mtd file to make sure
+// there are no MTDs in the current system
+func checkNoMtds() error {
+	if _, err := os.Stat(procMtdPath); os.IsNotExist(err) {
+		return nil
+	}
+	return errors.New(fmt.Sprintf("%v file already exists.\n", procMtdPath) +
+		"If nandsim is active, remove it using the command\n" +
+		"`modprobe -r nandsim`\n" +
+		"Otherwise, please use the Vagrant VM to run tests!\n" +
+		"See the README for more info.")
+}
+
 func setupNandsim() error {
 	_, err := exec.Command("modprobe", "nandsim", "first_id_byte=0x20", "second_id_byte=0x35").Output()
 	if err != nil {
 		return errors.New(fmt.Sprintf("modprobe command failed: %v", err))
 	}
-	buf, err := ioutil.ReadFile("/proc/mtd")
+	buf, err := ioutil.ReadFile(procMtdPath)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Can't read from '/proc/mtd': %v", err))
 	}
 	gotProcMtdContents := string(buf)
 	if procMtdContents != gotProcMtdContents {
 		return errors.New("nandsim not set up properly!\n" +
-			fmt.Sprintf("/proc/mtd: want '%v'\ngot '%v'", procMtdContents, gotProcMtdContents))
+			fmt.Sprintf("%v: want '%v'\ngot '%v'", procMtdPath, procMtdContents, gotProcMtdContents))
 	}
 	return nil
 }
